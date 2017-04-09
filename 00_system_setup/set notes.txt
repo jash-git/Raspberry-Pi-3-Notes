@@ -1,0 +1,146 @@
+01.sudo raspi-config
+02.new password: 1qazxsw2	[pi/raspberry]
+03.sudo shutdown -h now
+04.安裝中文輸入法
+	sudo apt-get install ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
+	sudo apt-get install scim scim-tables-zh scim-chewing
+	sudo dpkg-reconfigure locales
+	sudo reboot
+05.讓設備支援影像編輯功能
+	sudo apt-get update
+	sudo apt-get install gimp
+
+06.test python.py
+	$ gedit ./"hello python.py"
+		#!/usr/bin/env python
+		words = ["Hello ","python"]
+		for x in words:
+			print(x)
+	$ chmod +x ./"hello python.py"
+	$ ./"hello python.py"
+
+07.python GPIO安裝
+	$ sudo apt-get install RPi.GPIO
+		#!/usr/bin/env python
+		import time
+		import RPi.GPIO as GPIO
+		LED_PIN = 12
+		
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(LED_PIN,GPIO.OUT)
+		while True:
+		    print("LED is on");
+		    GPIO.output(LED_PIN,GPIO.HIGH)
+		    time.sleep(1)
+		    print("LED is off");
+		    GPIO.output(LED_PIN,GPIO.LOW)
+		    time.sleep(1)
+		GPIO.cleanup()
+	$ chmod +x ./ledblink.py
+	$ sudo ./ledblink.py
+
+08.安裝C/C++用GPIO Lib並測試
+	$ sudo apt-get update & apt-get upgrade -y
+	$ sudo apt-get install git
+	$ git clone git://git.drogon.net/wiringPi
+	$ cd wiringPi/
+	$ sudo ./build
+	$ gpio readall
+
+09.安裝圖形介面的FTP Client：
+	$ sudo apt-get install gftp
+
+10.安裝 gedit
+	$ sudo apt-get install gedit
+
+11.如何在Raspberry Pi上擷取畫面？
+	$ sudo apt-get install scrot
+	$ leafpad ~/.config/openbox/lxde-rc.xml
+	  <keybind key="Print">
+	      <action name="Execute">
+	          <command>scrot</command>
+	      </action>
+	  </keybind>
+	//進到桌面環境下，按 PrtSc 做 snapshot，擷取畫面的預設路徑是放在家目錄 (/home/pi) 下。
+
+12.安裝C/C++ IDE(可編譯)
+	開啟 Pi Store + 搜尋『Code::Blocks』,如圖01和02所示()
+	
+
+13.QT TOOL(https://www.youtube.com/watch?v=C_uOybXbDYI)
+	$ sudo apt-cache search qt5
+	$ sudo apt-cache show qt5-default
+	$ sudo apt-get install qt5-default
+	$ sudo apt-get install qtcreator
+
+14.Raspberry Pi Samba server
+	$ sudo apt-get install samba samba-common-bin
+	$ cd /etc/samba/
+	$ sudo cp ./smb.conf ./smb.conf_bk
+	$ sudo leafpad ./smb.conf
+	#設定檔已備份
+	$ sudo chgrp users ./Pi_Samba
+	$ sudo chmod 2770 ./Pi_Samba
+	$ sudo pdbedit -a -u pi
+
+15.LAMP
+	$ sudo apt-get install apache2 php5 php5-json php5-gd php5-sqlite curl libcurl3 libcurl4-openssl-dev
+	$ sudo apt-get install php5-curl php5-gd php5-cgi php-pear php5-dev build-essential
+	$ sudo apt-get install libpcre3-dev php5 libapache2-mod-php5 php-apc gparted
+	$ sudo leafpad /etc/php5/apache2/php.ini
+	#設定檔已備份 並有加註jash
+	$ sudo leafpad /etc/apache2/apache2.conf
+	#設定檔已備份 AllowOverride None -> AllowOverride all
+	$ sudo reboot
+	$ ifconfig
+	#test http://127.0.0.1/ http://IP/
+	$ sudo leafpad /var/www/html/php_info.php
+	#test http://127.0.0.1/php_info.php http://IP/php_info.php
+	$ sudo apt-get install mysql-server mysql-client php5-mysql
+	$ sudo apt-get install php5-mysqlnd
+	#mysql password:2wsxzaq1
+	#test mysql: $ mysql -u root -p /(quit)
+		# CREATE DATABASE test;
+		# USE test
+		# CREATE TABLE t1 (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name char(50));
+		# INSERT INTO t1 (id, name) VALUES (1, "jash");
+		# INSERT INTO t1 (id, name) VALUES (2, "jash.liao");
+		# SELECT * FROM t1;
+	$ sudo leafpad /var/www/html/setup.php
+		<?php
+		       $db_id="root";           //your mysql id
+		       $db_passwd="2wsxzaq1";  //your mysql password
+		       $db_name="test";         //your database name
+	       	$db_server="127.0.0.1";  //your server ip
+		?>
+	$ sudo leafpad /var/www/html/show_t1.php
+		<?php
+		  ini_set("display_errors", "On"); 
+		  header("Content-Type:text/html; charset=utf-8");//PHP 亂碼
+		
+		  require ('setup.php');     // 加載數據庫配置文件
+		
+		  $sql = "SELECT * FROM t1";
+		
+		  $numRecord = mysql_query($sql);
+		
+		  while($rs=mysql_fetch_object($numRecord))
+		
+		  {
+		
+		     echo $rs->id;
+		
+		     echo '<br>';
+		
+		     echo $rs->name;
+		
+		     echo '<br>';
+		
+		     echo '<br>';
+		
+		  }	
+		?>
+
+
+
+	
